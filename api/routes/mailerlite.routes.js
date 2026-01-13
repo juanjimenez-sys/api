@@ -1,5 +1,5 @@
 import express from "express";
-import { createContactElite } from "../controllers/contact.controller.js"; 
+import { createSubscriber } from "../controllers/contact.controller.js";
 
 const router = express.Router();
 
@@ -15,6 +15,6 @@ router.param("id", (req, res, next, id) => {
 });
 
 // Ruta para crear contacto
-router.post("/", createContactElite);
+router.post("/", createSubscriber);
 
 export default router;

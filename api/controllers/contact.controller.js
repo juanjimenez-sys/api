@@ -61,7 +61,7 @@ async function mlCreateOrAssignSubscriber({ email, fields }) {
   throw new Error(`MailerLite request failed: ${createResp.status} ${text}`);
 }
 
-export const createContactElite = async (req, res) => {
+export const createSubscriber = async (req, res) => {
   try {
     const { name, lastName, phone, email } = req.body;
 
@@ -91,7 +91,7 @@ export const createContactElite = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error("Error en createContactElite:", err.message);
+    console.error("Error en createSubscriber:", err.message);
     res.status(500).json({
       status: "error",
       message: err.message || "Error interno del servidor.",
