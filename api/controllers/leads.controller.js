@@ -158,13 +158,18 @@ function buildHtmlBody(lead, fecha, fallback) {
 </html>`;
 }
 
+function encodeHeaderText(text) {
+  // RFC 2047 encoded-word, necesario para que emojis/acentos no se corrompan en headers de email
+  return `=?UTF-8?B?${Buffer.from(text, "utf-8").toString("base64")}?=`;
+}
+
 function buildRawEmail({ to, subject, textBody, htmlBody }) {
   const boundary = `boundary_${Date.now()}`;
   const message = [
     `To: ${to}`,
     `From: Jimenez Drywall Web <${to}>`,
     `Date: ${new Date().toUTCString()}`,
-    `Subject: ${subject}`,
+    `Subject: ${encodeHeaderText(subject)}`,
     `MIME-Version: 1.0`,
     `Content-Type: multipart/alternative; boundary="${boundary}"`,
     "",
