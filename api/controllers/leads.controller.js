@@ -46,9 +46,15 @@ async function appendToSheet(accessToken, row) {
 }
 
 function buildRawEmail({ to, subject, body }) {
-  const message = [`To: ${to}`, `Subject: ${subject}`, `Content-Type: text/plain; charset="UTF-8"`, "", body].join(
-    "\r\n"
-  );
+  const message = [
+    `To: ${to}`,
+    `From: Jimenez Drywall Web <${to}>`,
+    `Date: ${new Date().toUTCString()}`,
+    `Subject: ${subject}`,
+    `Content-Type: text/plain; charset="UTF-8"`,
+    "",
+    body,
+  ].join("\r\n");
   return Buffer.from(message)
     .toString("base64")
     .replace(/\+/g, "-")
@@ -57,18 +63,23 @@ function buildRawEmail({ to, subject, body }) {
 }
 
 async function sendNotificationEmail(accessToken, lead, fecha) {
+  const fallback = (value) => (value && String(value).trim() ? value : "—");
   const subject = `Nuevo lead del sitio: ${lead.nombre} ${lead.apellido}`.trim();
   const body = [
+    "Nuevo lead recibido desde transformatuproyecto.com",
+    "",
     `Nombre: ${lead.nombre} ${lead.apellido}`,
     `Telefono/WhatsApp: ${lead.telefono}`,
-    `Email: ${lead.email}`,
-    `Ciudad: ${lead.ciudad}`,
-    `Servicio: ${lead.servicio}`,
-    `Mensaje: ${lead.mensaje}`,
-    `Preferencia de contacto: ${lead.preferencia}`,
-    `Pagina de origen: ${lead.pagina}`,
-    `Idioma: ${lead.idioma}`,
+    `Email: ${fallback(lead.email)}`,
+    `Ciudad: ${fallback(lead.ciudad)}`,
+    `Servicio: ${fallback(lead.servicio)}`,
+    `Mensaje: ${fallback(lead.mensaje)}`,
+    `Preferencia de contacto: ${fallback(lead.preferencia)}`,
+    `Pagina de origen: ${fallback(lead.pagina)}`,
+    `Idioma: ${fallback(lead.idioma)}`,
     `Fecha: ${fecha}`,
+    "",
+    "Este lead tambien quedo guardado en el Sheet control-de-leads.",
   ].join("\n");
 
   const raw = buildRawEmail({ to: process.env.NOTIFY_EMAIL, subject, body });
