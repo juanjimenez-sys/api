@@ -26,7 +26,7 @@ async function appendToSheet(accessToken, row) {
   const tab = process.env.LEADS_SHEET_TAB || "landingpage";
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(
     tab
-  )}!A:N:append?valueInputOption=USER_ENTERED`;
+  )}!A:N:append?valueInputOption=RAW`;
 
   const resp = await fetch(url, {
     method: "POST",
